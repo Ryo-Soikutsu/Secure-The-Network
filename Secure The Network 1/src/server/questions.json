@@ -1,0 +1,40 @@
+{
+    "questions": [
+        {
+            "question": "What is the IP address of the attacker?",
+            "answer": "201.172.32.43"
+        },
+        {
+            "question": "What is the public IP address of the target?",
+            "answer": "201.172.32.234"
+        },
+        {
+            "question": "What tool did the attacker use to scan the target? Answer in all lower-case",
+            "answer": "nmap"
+        },
+        {
+            "question": "What is the vulnerability used by the attacker on the target? Answer in all lower-case",
+            "answer": ["path traversal", "directory traversal"]
+        },
+        {
+            "question": "Give the timestamp when the enumeration process began. Answer in UTC (Format is MMM:DD, YYYY HH:MM:SS)",
+            "answer": "Nov 15, 2024 02:49:30"
+        },
+        {
+            "question": "What is the first directory enumeration tool that the attacker uses? Answer in all lower-case",
+            "answer": "dirbuster"
+        },
+        {
+            "question": "The attacker attempted to access the web server through SSH. What is the timestamp for the successful access? Answer in UTC (Format is YYYY-MM-DD HH:MM:SS)",
+            "answer": "2024-11-1511:47:17"
+        },
+        {
+            "question": "The attacker attempted to erase any traces of their attack by deleting system logs. Which files were modified by the attacker Answer in filename 1_filename 2",
+            "answer": "auth.log_error.log"
+        },
+        {
+            "question": "Upon further analysis of our firewall logs, it seems like one of the sysadmins had left in a rule which allowed for the attacker to access the remote server through SSH. Identify this overly-permissive rule. Answer is the rule's tracker ID",
+            "answer": "1730707767"
+        }
+    ]
+}
