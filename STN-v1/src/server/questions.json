@@ -18,7 +18,7 @@
         },
         {
             "question": "Give the timestamp when the enumeration process began. Answer in UTC (Format is MMM:DD, YYYY HH:MM:SS)",
-            "answer": "Nov 15, 2024 02:49:30"
+            "answer": "Nov 15, 2024 02:22:43"
         },
         {
             "question": "What is the first directory enumeration tool that the attacker uses? Answer in all lower-case",
