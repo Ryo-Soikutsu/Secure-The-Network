@@ -1,0 +1,19 @@
+# Challenge Metadata File (version 0.1)
+# This file is machine generated. DO NOT EDIT unless you know what you are doing.
+# If you want to create or edit a challenge, use the CLI instead.
+
+version = "0.1"
+
+[challenge]
+author = "Ryo Soikutsu"
+category = "forensics"
+description = "Our IDuccS have picked up some suspicious network traffic originating from one of our internal web servers. We believe that it has been compromised by Shroom agents, but are lacking the manpower to analyze the suspected traffic capture. Can you take a look at the network capture and figure out what's going on?\n"
+difficulty = "medium"
+name = "Secure The Network"
+folder_name = "Secure-The-Network"
+files = ["dist/capture.pcap"]
+
+[challenge.extras]
+
+[[challenge.flags]]
+flag = "CCTF25{Dn5_tUnN3l1ing_g0_brRr}"
