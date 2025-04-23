@@ -1,0 +1,1 @@
+Set-VpnConnectionIPsecConfiguration -ConnectionName "Secure The Network Admin VPN" -AuthenticationTransformConstants SHA256128 -CipherTransformConstants AES128 -DHGroup Group14 -EncryptionMethod GCMAES256 -IntegrityCheckMethod SHA256 -PfsGroup PFS2048 -Force

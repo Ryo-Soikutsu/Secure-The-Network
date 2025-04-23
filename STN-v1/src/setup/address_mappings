@@ -1,0 +1,24 @@
+Subnets:
+- WAN: 201.172.32.0/24
+- DMZ: 10.125.30.0/24
+- LAN: 192.168.10.0/24
+- VPN: 10.100.30.0/24
+
+WAN interface:
+- Attacker 1 (Main): 201.172.32.43 (done)
+- Attacker 2 (Secondary): 201.172.32.17 (done)
+- Client 1 (Upload/Download files): 201.172.32.30 (done)
+- Admin Client: 201.172.32.7 (done)
+
+LAN interface:
+- Syslog: 192.168.10.50
+- Internal Client 1: 192.168.10.30 (done)
+
+DMZ interface:
+- Webserver: 10.125.30.128 (done)
+  - Public IP: 201.172.32.234 (done)
+
+PFSense Firewall (missing configuration for firewall rules):
+- WAN: 201.172.32.250 (done)
+- LAN: 192.168.10.25 (done)
+- DMZ: 10.125.30.1 (done)

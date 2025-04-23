@@ -1,0 +1,14 @@
+{
+    "client-name": "Internal Client 1",
+    "interface": "LAN",
+    "target-urls": [
+        "https://vault.ybn/",
+        "http://201.172.32.234",
+        "http://10.125.30.128"
+    ],
+    "files": {
+        "uploaded": ["flag.enc", "primary.db", "backup_1.db.bak", "2024_financial_reports.pdf", "2024_financial_reports.pdf.enc"],
+        "downloaded": ["vid_32facbe.mp4", "vault.zip", "confidential.pdf", "flag.enc", "13827689dca018342", "091289cadfeb21521"]
+    },
+    "user-agent": "USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3)' 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36'"
+}

@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+
+{% block title %}File Management{% endblock %}
+
+{% block header %}
+    File Management
+{% endblock %}
+
+{% block content %}
+    <style>
+        /* Basic styling */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        
+        .file-tabs {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        /* Tab navigation styling */
+        .tab-navigation {
+            display: flex;
+            margin-bottom: 20px;
+            list-style: none;
+            padding: 0;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        .tab-navigation li {
+            flex: 1;
+            text-align: center;
+        }
+
+        .tab-link {
+            display: block;
+            padding: 10px 0;
+            font-weight: bold;
+            color: #555;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .tab-link.active, .tab-link:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* Tab content styling */
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #ffffff;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Form styling */
+        .download-form, .upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input[type="text"], input[type="file"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        input[type="submit"] {
+            padding: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        /* Available files styling */
+        .files-list {
+            margin-top: 20px;
+        }
+
+        .file-item {
+            margin-bottom: 10px;
+        }
+
+        .file-item a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .file-item a:hover {
+            color: #0056b3;
+        }
+    </style>
+
+    <div class="file-tabs">
+        <ul class="tab-navigation">
+            <li><a href="#download-tab" class="tab-link active">Download</a></li>
+            <li><a href="#upload-tab" class="tab-link">Upload</a></li>
+        </ul>
+
+        <div id="download-tab" class="tab-content active">
+            <h3>Download Files</h3>
+            <form class="download-form" action="/download" method="get">
+                <input type="text" name="file" placeholder="Enter file name">
+                <input type="submit" value="Download">
+            </form>
+
+            <h3>Available Files:</h3>
+            <div class="files-list">
+                {% for file in files %}
+                    <div class="file-item">
+                        <a href="/download?file={{ file }}">{{ file }}</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div id="upload-tab" class="tab-content">
+            <h3>Upload Files</h3>
+            <form class="upload-form" action="/upload" method="post" enctype="multipart/form-data">
+                <input type="file" name="file">
+                <input type="text" name="filename" placeholder="Enter file name">
+                <input type="submit" value="Upload">
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to handle tab switching
+        document.querySelectorAll('.tab-link').forEach(link => {
+            link.addEventListener('click', event => {
+                event.preventDefault();
+
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+
+                document.querySelector(link.getAttribute('href')).classList.add('active');
+
+                document.querySelectorAll('.tab-link').forEach(link => link.classList.remove('active'));
+                link.classList.add('active');
+            });
+        });
+    </script>
+{% endblock %}
