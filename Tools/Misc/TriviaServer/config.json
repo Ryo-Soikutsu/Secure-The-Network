@@ -1,4 +1,6 @@
 {
+    "name": "northland-trivia-server",
+    "chall": "secure-the-network",
     "questions": [
         {
             "question": "Example question",
