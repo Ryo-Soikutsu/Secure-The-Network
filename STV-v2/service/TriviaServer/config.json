@@ -1,0 +1,47 @@
+{
+    "name": "northland-trivia-server",
+    "chall": "secure-the-network",
+    "questions": [
+        {
+            "question": "What is the IP address of the attacker machine?",
+            "answer": "120.225.134.131"
+        },
+        {
+            "question": "What application is the Linux webserver running? Answer in all lower-case",
+            "answer": "wordpress"
+        },
+        {
+            "question": "What tool did the attacker use to enumerate the website? (Answer in all lowercase)",
+            "answer": "gobuster"
+        },
+        {
+            "question": "What is the vulnerable WordPress plugin that the attacker identified? Format: wordpress_plugin_in_lowercase:version_number",
+            "answer": "file_manager:v6.0",
+            "hint": "Check the HTTP requests made by the attacker"
+        },
+        {
+            "question": "What CVE did the attacker use to exploit the webserver? Format: CVE-XXXX-XXXX",
+            "answer": "CVE-2020-25213",
+            "hint": "Search Google for CVEs for the WordPress plugin and version found earlier"
+        },
+        {
+            "question": "What was the first command that the attacker ran after gaining initial access using the CVE? Answer is case-sensitive",
+            "answer": "python3 -c \"import pty;pty.spawn('/bin/bash')\"",
+            "hint": "This is a very common post-exploitation command used to stabilize a reverse/web shell..."
+        },
+        {
+            "question": "The attacker uploaded some files onto the webserver for privilege escalation and further enumeration. What are the files uploaded? Answer in alphabetical order",
+            "answer": "host_discovery.sh,linpeas.sh,port_discovery.sh",
+            "hint": "file_a.txt,file_b.txt,file_c.txt"
+        },
+        {
+            "question": "The attacker dropped another file on the webserver for persistence. Provide the filename of this file",
+            "answer": "id_ed25519.pub",
+            "hint": "What is a popular command-line tool to remotely connect to a Linux server?"
+        },
+        {
+            "question": "The attacker attempted to enumerate hosts on the internal network, and discovered one exposed host. What is the IP address of the host?",
+            "answer": "172.16.100.125"
+        }
+    ]
+}
