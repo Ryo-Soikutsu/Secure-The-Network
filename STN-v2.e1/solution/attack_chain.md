@@ -1,0 +1,9 @@
+- Attacker successfully performs a phishing attack on a victim, gains access to NORTHLAND-WKS03 as a low-privileged domain user (Collin Shaw)
+- Attacker discovers SeImpersonate privilege, uses JuicyPotato to get access to NT AUTHORITY\SYSTEM
+- Attacker loads mimikatz into memory, dumps LSASS memory to obtain credentials
+- Obtain password hash for a HR manager account (Jim Huynh), laterally move to NORTHLAND-MGMT02 on the network
+- Attacker performs further enumeration, discovers that the current user is local administrator on MGMT02
+- Load mimikatz into memory again, obtain the hash for an IT manager's account (Kendrick Oneal)
+- Perform DCSync attack, extract krbtgt password hash
+- Perform golden ticket attack to obtain access to the Administrator domain account
+- Create persistence user and add to Domain Admins group

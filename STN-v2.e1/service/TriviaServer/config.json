@@ -1,0 +1,48 @@
+{
+    "name": "northland-trivia-server",
+    "chall": "secure-the-network",
+    "questions": [
+        {
+            "question": "What is the username of the domain account that the attacker first gains access to?",
+            "answer": "c.shaw",
+            "hint": "Provide the username only (e.g. if the user is NORTHLAND\\Administrator, submit the answer as Administrator)"
+        },
+        {
+            "question": "What is the full hostname of the first system that the attacker gains access to",
+            "answer": "NORTHLAND-WKS01",
+            "hint": "Provide the full hostname with the domain name (e.g. EXAMPLE-DC01)"
+        },
+        {
+            "question": "What is the filename of the reverse shell program that the attacker uses?",
+            "answer": "installer.exe",
+            "hint": "Provide only the filename, without the path (e.g. shell.exe)"
+        },
+        {
+            "question": "Provide the MD5 hash of the reverse shell program (in all caps)",
+            "answer": "E7A6B1F51EFB405287A8048CFA4690F4"
+        },
+        {
+            "question": "The attacker attempted to escalate their privileges to the local SYSTEM account. What is the name of the privesc binary used?",
+            "answer": "print.exe"
+        },
+        {
+            "question": "The attacker attempted to dump the contents of the LSASS process's memory to obtain credentials. What is the name of the binary used, and what is the actual name of the binary?",
+            "answer": "dump.exe,mimikatz.exe",
+            "hint": "The attacker used a well-known program to perform the credentials dump. Answer format: renamed_binary.exe,real_binary.exe"
+        },
+        {
+            "question": "The attacker obtained the password hash of another user, and performed a Pass-the-Hash attack to gain access to another system. What is the hostname of the second system?",
+            "answer": "NORTHLAND-HR01"
+        },
+        {
+            "question": "The attacker performed a DCSync attack using the secretsdump.py utility. What is the process ID of the spawned process on the DC? Answer in hexadecimal (e.g. 0x1000)",
+            "answer": "0x334",
+            "hint": "Try to look for privileged service access, and try to correlate them with the attack timeline"
+        },
+        {
+            "question": "What is the username and password of the backdoor admin user that the attacker created?",
+            "answer": "ichinose:h4ck3d123!",
+            "hint": "Answer format: username:password"
+        }
+    ]
+}
