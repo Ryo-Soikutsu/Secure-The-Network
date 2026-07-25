@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# SET THESE VARIABLES FIRST
-
 set -e
 
 sudo apt update -y
