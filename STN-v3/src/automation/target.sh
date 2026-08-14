@@ -4,25 +4,25 @@ set -e
 
 # Cleanup for previous execution
 if [ -d ~/juice-shop ]; then
-	sudo rm -rf ~/juice-shop
+  sudo rm -rf ~/juice-shop
 fi
 if [ -d /usr/local/go ]; then
-	sudo rm -rf /usr/local/go
+  sudo rm -rf /usr/local/go
 fi
 if [ -d /etc/caddy/coraza ]; then
-	sudo rm -rf /etc/caddy/
+  sudo rm -rf /etc/caddy/
 fi
 if [ -f /usr/local/bin/caddy ]; then
-	sudo rm -f /usr/local/bin/caddy
+  sudo rm -f /usr/local/bin/caddy
 fi
 if [ -f /etc/systemd/system/juiceshop.service ]; then
-	sudo rm -f /etc/systemd/system/juiceshop.service
+  sudo rm -f /etc/systemd/system/juiceshop.service
 fi
 if [ -f /etc/systemd/system/caddy.service ]; then
-	sudo rm -f /etc/systemd/system/caddy.service
+  sudo rm -f /etc/systemd/system/caddy.service
 fi
 if [ -f ~/.bashrc.bak ]; then
-	mv ~/.bashrc.bak ~/.bashrc
+  mv ~/.bashrc.bak ~/.bashrc
 fi
 
 # Cleanup done, now we can start installing
@@ -37,7 +37,7 @@ sudo apt install git curl build-essential ca-certificates policycoreutils-python
 
 curl -LO https://go.dev/dl/go1.25.12.linux-amd64.tar.gz
 sudo tar -C /usr/local -xzf go1.25.12.linux-amd64.tar.gz
-echo 'export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin' >> ~/.bashrc
+echo 'export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin' >>~/.bashrc
 export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin
 source ~/.bashrc
 go version
@@ -49,12 +49,14 @@ sudo chmod +x /usr/local/bin/caddy
 caddy version
 
 sudo mkdir -p /etc/caddy/coraza
+sudo mkdir -p /var/log/coraza
+sudo mkdir -p /var/log/caddy
 cd /etc/caddy/coraza
 sudo git clone https://github.com/corazawaf/coraza-coreruleset.git
 sudo git clone https://github.com/coreruleset/coreruleset.git crs
 cd crs
 sudo cp crs-setup.conf.example crs-setup.conf
-sudo tee /etc/caddy/Caddyfile > /dev/null << 'EOF'
+sudo tee /etc/caddy/Caddyfile >/dev/null <<'EOF'
 {
 	order coraza_waf first
 }
@@ -66,16 +68,24 @@ sudo tee /etc/caddy/Caddyfile > /dev/null << 'EOF'
 			Include @crs-setup.conf.example
 			Include @owasp_crs/*.conf
 			SecRuleEngine On
+      SecAuditEngine On
+      SecAuditLog /var/log/coraza/audit.log
+      SecAuditLogType Serial
 		`
 	}
-	reverse_proxy 127.0.0.1:3000
+  log {
+    output file /var/log/caddy/access.
+    output file /var/log/caddy/access.log
+    level info
+  }
+	reverse_proxy 0.0.0.0:3000
 }
 EOF
 
 curl https://raw.githubusercontent.com/nvm-sh/nvm/refs/heads/master/install.sh | bash
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 nvm install 24
 nvm use 24
 
@@ -83,7 +93,7 @@ cd ~
 git clone https://github.com/juice-shop/juice-shop
 cd juice-shop
 npm install
-sudo tee /etc/systemd/system/juiceshop.service > /dev/null << EOF
+sudo tee /etc/systemd/system/juiceshop.service >/dev/null <<EOF
 [Unit]
 Description=OWASP Juice Shop
 After=network.target
@@ -92,14 +102,15 @@ After=network.target
 Type=simple
 User=ubuntu
 WorkingDirectory=/home/ubuntu/juice-shop
-ExecStart=$(which npm) start
+Environment=PATH=${NODE_BIN_DIR}:/usr/bin:/bin
+ExecStart=${NODE_BIN_DIR}/npm start
 Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-sudo tee /etc/systemd/system/caddy.service > /dev/null << 'EOF'
+sudo tee /etc/systemd/system/caddy.service >/dev/null <<'EOF'
 [Unit]
 Description=Caddy
 After=network.target juiceshop.service
@@ -119,16 +130,20 @@ sudo systemctl enable juiceshop caddy
 # Setting up fail2ban and nftables
 sudo apt install fail2ban -y
 sudo rm /etc/fail2ban/jail.d/defaults-debian.conf
-sudo tee /etc/fail2ban/jail.local > /dev/null << EOF
+sudo tee /etc/fail2ban/jail.local >/dev/null <<EOF
 [DEFAULT]
 ignoreip = $(hostname -I | awk '{print $1}')
 bantime = 10m
 findtime = 10m
 maxretry = 5
-banaction=nftables[type=multiport]
+banaction=nftables-multiports
+banaction_allports=nftables-multiports
 
 [sshd]
 enabled = true
+filter = sshd
+port = sshd
+logpath = /var/log/auth.log
 backend = systemd
 EOF
 sudo systemctl restart fail2ban
@@ -136,7 +151,7 @@ sudo systemctl restart fail2ban
 # Setting up auditctl
 sudo apt install auditd audispd-plugins -y
 sudo rm /etc/audit/rules.d/audit.rules
-sudo tee /etc/audit/rules.d/00-audit.rules > /dev/null << 'EOF'
+sudo tee /etc/audit/rules.d/00-audit.rules >/dev/null <<'EOF'
 -b 8192
 --backlog_wait_time 60000
 -f 1
@@ -144,7 +159,7 @@ sudo tee /etc/audit/rules.d/00-audit.rules > /dev/null << 'EOF'
 -e 2
 EOF
 
-sudo tee /etc/audit/rules.d/30-fsys.rules > /dev/null << 'EOF'
+sudo tee /etc/audit/rules.d/30-fsys.rules >/dev/null <<'EOF'
 -w /etc/passwd -p wa -k identity_changes
 -w /etc/shadow -p rwax -k shadow_access
 -w /etc/group -p wa -k identity_changes
@@ -174,7 +189,7 @@ sudo tee /etc/audit/rules.d/30-fsys.rules > /dev/null << 'EOF'
 -w /etc/audit/rules.d/ -p wa -k audit_config
 EOF
 
-sudo tee /etc/audit/rules.d/40-syscalls.rules > /dev/null << 'EOF'
+sudo tee /etc/audit/rules.d/40-syscalls.rules >/dev/null <<'EOF'
 -a always,exit -F arch=b64 -S execve -k exec
 -a always,exit -F arch=b32 -S execve -k exec
 -a always,exit -F arch=b64 -S execve -F euid=0 -k exec
@@ -208,7 +223,7 @@ sudo tee /etc/audit/rules.d/40-syscalls.rules > /dev/null << 'EOF'
 -a always,exit -F arch=b32 -S connect -k network_connect
 EOF
 
-sudo tee /etc/audit/rules.d/50-user-activity.rules > /dev/null << 'EOF'
+sudo tee /etc/audit/rules.d/50-user-activity.rules >/dev/null <<'EOF'
 -w /var/log/sudo.log -p wa -k sudo_log
 -w /usr/bin/sudo -p x -k sudo_execution
 -w /etc/login.defs -p wa -k login_config
@@ -242,5 +257,10 @@ EOF
 sudo systemctl restart auditd
 
 notify-send -i dialog-info "Automated setup completed" "System will restart in 15 seconds"
+
+echo "=================================================="
+echo "Automated setup completed."
+echo "System will restart in 15 seconds"
+echo "=================================================="
 sleep 15
 reboot
