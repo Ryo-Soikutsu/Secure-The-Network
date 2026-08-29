@@ -3,13 +3,13 @@
 set -e
 
 # Cleanup for previous execution
-if [ -d ~/juice-shop ]; then
-  sudo rm -rf ~/juice-shop
+if [ -d /var/www/html/juice-shop ]; then
+  sudo rm -rf /var/www/html/juice-shop
 fi
 if [ -d /usr/local/go ]; then
   sudo rm -rf /usr/local/go
 fi
-if [ -d /etc/caddy/coraza ]; then
+if [ -d /etc/caddy/ ]; then
   sudo rm -rf /etc/caddy/
 fi
 if [ -f /usr/local/bin/caddy ]; then
@@ -30,20 +30,17 @@ fi
 sudo apt update -y
 sudo apt upgrade -y
 sudo apt install libnotify-bin -y
-sudo apt install git curl build-essential ca-certificates policycoreutils-python-utils -y
+sudo apt install git curl golang-go build-essential ca-certificates policycoreutils-python-utils -y
 
 # Setting up the web portion
 # Caddy + Coraza
 
-curl -LO https://go.dev/dl/go1.25.12.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.25.12.linux-amd64.tar.gz
-echo 'export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin' >>~/.bashrc
-export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin
-source ~/.bashrc
-go version
+sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/xcaddy/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-xcaddy-archive-keyring.gpg
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/xcaddy/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-xcaddy.list
+sudo apt update
+sudo apt install xcaddy
 
-go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
-CGO_ENABLED=1 xcaddy build --with github.com/corazawaf/coraza-caddy/v2 --with github.com/corazawaf/coraza-coreruleset
 sudo mv caddy /usr/local/bin/caddy
 sudo chmod +x /usr/local/bin/caddy
 caddy version
@@ -74,11 +71,10 @@ sudo tee /etc/caddy/Caddyfile >/dev/null <<'EOF'
 		`
 	}
   log {
-    output file /var/log/caddy/access.
     output file /var/log/caddy/access.log
     level info
   }
-	reverse_proxy 0.0.0.0:3000
+	reverse_proxy 127.0.0.1:3000
 }
 EOF
 
@@ -89,9 +85,8 @@ export NVM_DIR="$HOME/.nvm"
 nvm install 24
 nvm use 24
 
-cd ~
-git clone https://github.com/juice-shop/juice-shop
-cd juice-shop
+git clone https://github.com/juice-shop/juice-shop /var/www/html/juice-shop/
+cd /var/www/html/juice-shop
 npm install
 sudo tee /etc/systemd/system/juiceshop.service >/dev/null <<EOF
 [Unit]
@@ -133,9 +128,9 @@ sudo rm /etc/fail2ban/jail.d/defaults-debian.conf
 sudo tee /etc/fail2ban/jail.local >/dev/null <<EOF
 [DEFAULT]
 ignoreip = $(hostname -I | awk '{print $1}')
-bantime = 10m
+bantime = 30m
 findtime = 10m
-maxretry = 5
+maxretry = 3
 banaction=nftables-multiports
 banaction_allports=nftables-multiports
 

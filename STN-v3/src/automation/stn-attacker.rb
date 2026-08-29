@@ -30,9 +30,9 @@ class MetasploitModule < Msf::Auxiliary
 
   def initialize(info = {})
     super(update_info(info,
-      'Name'        => 'SOC CTF Full Attack Chain',
+      'Name'        => 'Secure The Network v3 Automated Attacker',
       'Description' => 'Automated attack simulation: brute force → info disclosure → foothold → privesc → exfil → persistence',
-      'Author'      => ['ctf-author'],
+      'Author'      => ['ryo-soikutsu'],
       'License'     => MSF_LICENSE
     ))
 
