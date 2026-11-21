@@ -41,6 +41,7 @@ curl -1sLf 'https://dl.cloudsmith.io/public/caddy/xcaddy/debian.deb.txt' | sudo 
 sudo apt update
 sudo apt install xcaddy
 
+xcaddy build --with github.com/corazawaf/coraza-caddy/v2
 sudo mv caddy /usr/local/bin/caddy
 sudo chmod +x /usr/local/bin/caddy
 caddy version
