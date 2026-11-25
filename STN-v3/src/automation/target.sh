@@ -86,7 +86,9 @@ export NVM_DIR="$HOME/.nvm"
 nvm install 24
 nvm use 24
 
-git clone https://github.com/juice-shop/juice-shop /var/www/html/juice-shop/
+sudo mkdir -p /var/www/html/
+sudo git clone https://github.com/juice-shop/juice-shop /var/www/html/juice-shop/
+sudo chown ubuntu:ubuntu -R /var/www/html/juice-shop/
 cd /var/www/html/juice-shop
 npm install
 sudo tee /etc/systemd/system/juiceshop.service >/dev/null <<EOF
@@ -97,10 +99,11 @@ After=network.target
 [Service]
 Type=simple
 User=ubuntu
-WorkingDirectory=/home/ubuntu/juice-shop
-Environment=PATH=${NODE_BIN_DIR}:/usr/bin:/bin
-ExecStart=${NODE_BIN_DIR}/npm start
+WorkingDirectory=/var/www/html/juice-shop
+Environment=PATH=${NVM_DIR}/versions/node/v24.22.3/bin:/usr/bin:/bin
+ExecStart=${NVM_DIR}/versions/node/v24.22.3/bin/npm start
 Restart=on-failure
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
@@ -116,6 +119,7 @@ User=root
 ExecStart=/usr/local/bin/caddy run --config /etc/caddy/Caddyfile
 ExecReload=/usr/local/bin/caddy reload --config /etc/caddy/Caddyfile
 Restart=on-failure
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
